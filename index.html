@@ -349,6 +349,21 @@
     </div>
 
     <script>
+const LOG_ENDPOINT = "https://script.google.com/macros/s/AKfycbxEXA01p8NL7bWhE4bWRLnjYNUAUlq2blK1YZUCVysQqVqWvW1onmRYTbPwE99JQkbcoA/exec";
+
+function logEvent(event, from, to) {
+  fetch(LOG_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      event,
+      from,
+      to,
+      userAgent: navigator.userAgent
+    })
+  });
+}
       const params = new URLSearchParams(window.location.search);
       const from = params.get("from");
       const to = params.get("to");
@@ -359,25 +374,45 @@
         valentineSection.style.display = "block";
         toNameDisplay.textContent = decodeURIComponent(to);
         fromNameSuccess.textContent = decodeURIComponent(from);
+		  logEvent(
+  "Opened link",
+  decodeURIComponent(from),
+  decodeURIComponent(to)
+);
 
         const noBtn = document.getElementById("noBtn");
 
-        noBtn.addEventListener("mouseenter", () => {
-          noBtn.classList.add("moving");
+       noBtn.addEventListener("mouseenter", () => {
 
-          const padding = 20;
-          const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-          const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+  logEvent(
+    "Tried to click NO",
+    decodeURIComponent(from),
+    decodeURIComponent(to)
+  );
 
-          noBtn.style.left = Math.random() * maxX + "px";
-          noBtn.style.top = Math.random() * maxY + "px";
-        });
+  noBtn.classList.add("moving");
+
+  const padding = 20;
+  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+});
+
 
         yesBtn.onclick = () => {
-          valentineContent.style.display = "none";
-          successMessage.style.display = "block";
-          setTimeout(() => (kissingAnimation.style.display = "block"), 300);
-        };
+  logEvent(
+    "Clicked YES",
+    decodeURIComponent(from),
+    decodeURIComponent(to)
+  );
+
+  valentineContent.style.display = "none";
+  successMessage.style.display = "block";
+  setTimeout(() => (kissingAnimation.style.display = "block"), 300);
+};
+
       }
 
       linkForm?.addEventListener("submit", (e) => {
@@ -398,3 +433,4 @@
     </script>
   </body>
 </html>
+
